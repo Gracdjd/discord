@@ -57,9 +57,9 @@ model Member {
   id String @id @default(uuid())
   role MemberRole @default(GUEST)
 
-  profieId String
+  profileId String
 
-  profile Profile @relation(fields: [profieId], references: [id], onDelete: Cascade)
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   serverId String
   server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
@@ -67,7 +67,7 @@ model Member {
   createAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([profieId])
+  @@index([profileId])
   @@index([serverId])
 }
 

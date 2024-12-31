@@ -21,9 +21,9 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import FileUpload from "../file-upload";
-import { POST } from "@/app/api/servers/route";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 const formSchema = z.object({
   name: z.string().min(1, {
     message: "server name is required",
@@ -33,7 +33,10 @@ const formSchema = z.object({
   }),
 });
 
-const InitalModal = () => {
+const CreateServerModal = () => {
+  const { isOpen, onClose, type } = useModal();
+  const isModalOpen = isOpen && type === "createServer";
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,8 +44,6 @@ const InitalModal = () => {
       imageUrl: "",
     },
   });
-  const router = useRouter();
-
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -51,15 +52,18 @@ const InitalModal = () => {
       await axios.post("/api/servers", values);
       form.reset();
       router.refresh();
-      window.location.reload();
     } catch (e) {
       console.log(e);
     }
   };
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
   return (
     <div>
-      <Dialog open={true}>
-        <DialogContent className="bg-white text-black p-0 overflow-hidden ">
+      <Dialog open={isModalOpen} onOpenChange={handleClose}>
+        <DialogContent className="bg-white text-black p-0 overflow-hidden">
           <DialogHeader className="px-6 pt-8">
             <DialogTitle className="text-2xl text-center font-bold">
               Custom your server
@@ -124,4 +128,4 @@ const InitalModal = () => {
   );
 };
 
-export default InitalModal;
+export default CreateServerModal;
