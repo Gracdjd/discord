@@ -19,17 +19,12 @@ import axios from "axios";
 
 const InviteModal = () => {
   const { isOpen, onOpen, onClose, type, data } = useModal();
-  console.log(isOpen);
-  console.log(type);
-  console.log(data);
   const isModalOpen = isOpen && type === "invite";
 
   const origin = useOrigin();
   const { server } = data;
-  console.log("serverdata", data?.server);
 
   const inviteUrl = `${origin}/invite/${server?.inviteCode}`;
-  console.log(inviteUrl);
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 

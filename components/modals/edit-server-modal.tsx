@@ -24,6 +24,8 @@ import FileUpload from "../file-upload";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
+import { useEffect } from "react";
+import { Server } from "lucide-react";
 const formSchema = z.object({
   name: z.string().min(1, {
     message: "server name is required",
@@ -34,8 +36,9 @@ const formSchema = z.object({
 });
 
 const EditServerModal = () => {
-  const { isOpen, onClose, type } = useModal();
-  const isModalOpen = isOpen && type === "createServer";
+  const { data, isOpen, onClose, type } = useModal();
+  const { server } = data;
+  const isModalOpen = isOpen && type === "editServer";
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -44,12 +47,20 @@ const EditServerModal = () => {
       imageUrl: "",
     },
   });
+
+  useEffect(() => {
+    if (server) {
+      form.setValue("name", server.name);
+      form.setValue("imageUrl", server.imageUrl);
+    }
+  }, [server, form]);
+
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
     try {
-      await axios.post("/api/servers", values);
+      await axios.patch(`/api/servers/${server?.id}`, values);
       form.reset();
       router.refresh();
     } catch (e) {
@@ -117,7 +128,7 @@ const EditServerModal = () => {
               </div>
               <DialogFooter className="bg-gray-100 px-6 py-4">
                 <Button variant="primary" disabled={isLoading}>
-                  Create
+                  Save
                 </Button>
               </DialogFooter>
             </form>
