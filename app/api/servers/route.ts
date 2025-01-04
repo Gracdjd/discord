@@ -11,7 +11,6 @@ export async function POST(req: Request) {
     if (!profile) {
       return new NextResponse("Unathorized", { status: 401 });
     }
-    console.log(imageUrl);
     const server = await db.server.create({
       data: {
         profileId: profile.id,

@@ -25,7 +25,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 import { useEffect } from "react";
-import { Server } from "lucide-react";
 const formSchema = z.object({
   name: z.string().min(1, {
     message: "server name is required",
@@ -36,7 +35,7 @@ const formSchema = z.object({
 });
 
 const EditServerModal = () => {
-  const { data, isOpen, onClose, type } = useModal();
+  const { data, isOpen, onClose, type, onOpen } = useModal();
   const { server } = data;
   const isModalOpen = isOpen && type === "editServer";
   const router = useRouter();
@@ -58,10 +57,10 @@ const EditServerModal = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     try {
-      await axios.patch(`/api/servers/${server?.id}`, values);
+      const res = await axios.patch(`/api/servers/${server?.id}`, values);
       form.reset();
+      onOpen("editServer", { server: res.data });
       router.refresh();
     } catch (e) {
       console.log(e);

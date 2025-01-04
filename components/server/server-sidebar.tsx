@@ -34,7 +34,7 @@ const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
       },
     },
   });
-
+  // TODO:wirte to zustand
   const textChannels = server?.channels.filter(
     (channel) => channel.type === ChannelType.TEXT
   );
