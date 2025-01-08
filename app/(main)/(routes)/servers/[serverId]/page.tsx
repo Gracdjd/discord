@@ -1,15 +1,48 @@
-"use client";
-import { useEffect, useState } from "react";
+import { currentProfile } from "@/lib/current-profile";
+import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+interface ServerIdPage {
+  params: {
+    serverId: string;
+  };
+}
 
-const ServerPage = () => {
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  if (isMounted == false) {
+const ServerIdPage = async ({ params }: ServerIdPage) => {
+  const profile = await currentProfile();
+  const { redirectToSignIn } = await auth();
+
+  if (!profile) {
+    return redirectToSignIn();
+  }
+
+  const server = await db.server.findUnique({
+    where: {
+      id: params.serverId,
+      members: {
+        some: {
+          profileId: profile.id,
+        },
+      },
+    },
+    include: {
+      channels: {
+        where: {
+          name: "general",
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
+  });
+  const inititalChannel = server?.channels[0];
+  if (inititalChannel?.name !== "general") {
     return null;
   }
-  return <div>Server Id Page</div>;
+  return redirect(
+    `/servers/${params.serverId}/channels/${inititalChannel?.id}`
+  );
 };
 
-export default ServerPage;
+export default ServerIdPage;

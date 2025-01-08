@@ -13,6 +13,23 @@ export const initialProfile = async () => {
     },
   });
 
+  if (
+    profile.imageUrl !== user.imageUrl ||
+    profile.name !== `${user.firstName} ${user.lastName}` ||
+    profile.email !== user.emailAddresses[0].emailAddress
+  ) {
+    const updatedProfile = await db.profile.update({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        name: `${user.firstName} ${user.lastName}`,
+        imageUrl: user.imageUrl,
+        email: user.emailAddresses[0].emailAddress,
+      },
+    });
+    return updatedProfile;
+  }
   if (profile) {
     return profile;
   }
