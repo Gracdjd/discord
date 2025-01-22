@@ -5,8 +5,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { cn } from "@/lib/utils";
 import { ModalProvider } from "@/components/provider/modal-provider";
-import InitalModal from "@/components/modals/initail-modal";
-import CreateServerModal from "@/components/modals/create-server-modal";
+import { SocketProvider } from "@/components/provider/socket-provider";
+import { QueryProvider } from "@/components/provider/query-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,10 +28,10 @@ export default async function RootLayout({
             enableSystem={false}
             storageKey="discord-theme"
           >
-            <div>
+            <SocketProvider>
               <ModalProvider />
-              {children}
-            </div>
+              <QueryProvider>{children}</QueryProvider>
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>

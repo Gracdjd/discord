@@ -143,7 +143,7 @@ const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
             </div>
           </div>
         )}
-        {audioChannels?.length && (
+        {audioChannels?.length != 0 && (
           <div className="mb-2">
             <ServerSection
               sectionType="channels"
@@ -163,7 +163,7 @@ const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
             </div>
           </div>
         )}
-        {videoChannels?.length && (
+        {videoChannels?.length != 0 && (
           <div className="mb-2">
             <ServerSection
               sectionType="channels"
@@ -183,7 +183,7 @@ const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
             </div>
           </div>
         )}
-        {members?.length && (
+        {members?.length != 0 && (
           <div className="mb-2">
             <ServerSection
               sectionType="members"

@@ -14,7 +14,7 @@ export const initialProfile = async () => {
   });
 
   if (
-    profile.imageUrl !== user.imageUrl ||
+    profile?.imageUrl !== user.imageUrl ||
     profile.name !== `${user.firstName} ${user.lastName}` ||
     profile.email !== user.emailAddresses[0].emailAddress
   ) {
