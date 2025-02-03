@@ -14,7 +14,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 
-const DeleteChannelModal = () => {
+const DeleteMessageModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const { server, channel } = data;
 
@@ -76,4 +76,4 @@ const DeleteChannelModal = () => {
   );
 };
 
-export default DeleteChannelModal;
+export default DeleteMessageModal;

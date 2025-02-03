@@ -3,7 +3,7 @@ import { db } from "./db";
 import { NextApiRequest } from "next";
 
 export const currentProfile = async (req: NextApiRequest) => {
-  const { userId } = await getAuth(req);
+  const { userId } = getAuth(req);
   if (!userId) return null;
 
   const profile = await db.profile.findUnique({
