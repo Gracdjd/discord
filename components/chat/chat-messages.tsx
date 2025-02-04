@@ -4,9 +4,10 @@ import { Member, Message, Profile } from "@prisma/client";
 import { ChatWelcome } from "./chat-welcome";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { ChatItem } from "./chat-item";
 import { format } from "date-fns";
+import { useChatSocket } from "@/hooks/use-chat-socket";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -37,8 +38,20 @@ export const ChatMessages = ({
   type,
 }: ChatMessagesProps) => {
   const queryKey = `chat:${chatId}`;
+  const addKey = `chat:${chatId}:messages`;
+  const updateKey = `chat:${chatId}:messages:update`;
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useChatQuery({ queryKey, apiUrl, paramKey, paramValue });
+
+  useChatSocket({ queryKey, addKey, updateKey });
+  const end = useRef(null);
+
+  useEffect(() => {
+    const messageEnd: any = end.current;
+    if (messageEnd) {
+      messageEnd.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [data]);
 
   if (status === "pending") {
     return (
@@ -50,7 +63,6 @@ export const ChatMessages = ({
       </div>
     );
   }
-
   if (status === "error") {
     return (
       <div className="flex flex-col flex-1 justify-center items-center">
@@ -61,7 +73,7 @@ export const ChatMessages = ({
       </div>
     );
   }
-  console.log(data);
+
   return (
     <div className="flex-1 flex flex-col py-4 overflow-y-auto">
       <div className="flex-1" />
@@ -87,6 +99,7 @@ export const ChatMessages = ({
           </Fragment>
         ))}
       </div>
+      <div style={{ float: "left", clear: "both" }} ref={end}></div>
     </div>
   );
 };

@@ -18,8 +18,8 @@ const DeleteMessageModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const { server, channel } = data;
 
-  const isModalOpen = isOpen && type === "deleteChannel";
-
+  const isModalOpen = isOpen && type === "deleteMessage";
+  const { apiUrl, query } = data;
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
@@ -28,15 +28,12 @@ const DeleteMessageModal = () => {
     try {
       setIsLoading(true);
       const url = qs.stringifyUrl({
-        url: `/api/channels/${channel?.id}`,
-        query: {
-          serverId: params?.serverId,
-        },
+        url: apiUrl as string,
+        query,
       });
       await axios.delete(url);
       onClose();
       router.refresh();
-      router.push(`/servers/${params?.serverId}`);
     } catch (error) {
       console.log(error);
     } finally {
@@ -50,7 +47,7 @@ const DeleteMessageModal = () => {
         <DialogContent className="bg-white text-black p-0 overflow-hidden">
           <DialogHeader className="px-6 pt-8">
             <DialogTitle className="text-2xl text-center font-bold">
-              Delete Channel
+              Delete Message
             </DialogTitle>
             <DialogDescription>
               Are you sure you want to do this?
