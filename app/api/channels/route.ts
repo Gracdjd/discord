@@ -17,10 +17,10 @@ export async function POST(req: Request) {
 
     const server = await db.server.update({
       where: {
-        id: serverId,
+        id: serverId as string,
         members: {
           some: {
-            profileId: profile.id,
+            profileId: profile?.id,
             role: {
               in: [MemberRole.ADMIN, MemberRole.MODERATOR],
             },
@@ -30,10 +30,10 @@ export async function POST(req: Request) {
       data: {
         channels: {
           create: {
-            profileId: profile.id,
+            profileId: profile?.id,
             name,
             type,
-          },
+          } as any,
         },
       },
     });
