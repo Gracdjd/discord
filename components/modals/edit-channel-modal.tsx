@@ -70,7 +70,7 @@ const EditChannelModal = () => {
       const url = qs.stringifyUrl({
         url: `/api/channels/${channel?.id}`,
         query: {
-          serverId: server.id,
+          serverId: server?.id,
         },
       });
       console.log(url);

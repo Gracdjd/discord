@@ -53,7 +53,7 @@ const MembersModal = () => {
       const url = qs.stringifyUrl({
         url: `/api/members/${memberId}`,
         query: {
-          serverId: server.id,
+          serverId: server?.id,
         },
       });
       const res = await axios.delete(url);
@@ -72,7 +72,7 @@ const MembersModal = () => {
       const url = qs.stringifyUrl({
         url: `/api/members/${memberId}`,
         query: {
-          serverId: server.id,
+          serverId: server?.id,
         },
       });
       const res = await axios.patch(url, { role });
